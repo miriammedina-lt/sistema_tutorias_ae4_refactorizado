@@ -9,6 +9,11 @@ import edu.uees.tutorias.notification.Notificador;
 import edu.uees.tutorias.patrones.builder.ReservaBuilder;
 
 public class ServicioReservas {
+
+    // Constantes estáticas para evitar Magic Strings
+    private static final String PREFIJO_RESERVA_ID = "RES-";
+    private static final String MENSAJE_CONFIRMACION  = "Tu reserva de tutoría ha sido registrada.";
+
     private final RepositorioReservas repositorio;
     private final Notificador notificador;
 
@@ -35,7 +40,7 @@ public class ServicioReservas {
         repositorio.guardar(reserva);
 
         if (notificador != null && reserva.getEstudiante() != null) {
-            notificador.enviarMensaje(reserva.getEstudiante(), "Tu reserva de tutoría ha sido registrada.");
+            notificador.enviarMensaje(reserva.getEstudiante(), MENSAJE_CONFIRMACION);
         }
 
         return reserva;
@@ -59,7 +64,7 @@ public class ServicioReservas {
         }
 
         ReservaBuilder builder = new ReservaBuilder(
-            "RES-" + System.currentTimeMillis(),
+            PREFIJO_RESERVA_ID + System.currentTimeMillis(),
             estudiante,
             docente,
             materia,
