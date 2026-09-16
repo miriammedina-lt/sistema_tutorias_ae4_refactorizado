@@ -15,7 +15,10 @@ edu\uees\tutorias\patrones\factory\EmailNotificadorFactory.class
 edu\uees\tutorias\domain\Usuario.class
 edu\uees\tutorias\patrones\factory\WhatsAppNotificadorFactory.class
 edu\uees\tutorias\patrones\factory\SMSNotificadorFactory.class
+edu\uees\tutorias\patrones\strategy\CancelacionPrioritariaStrategy.class
+edu\uees\tutorias\patrones\strategy\EstrategiaCancelacion.class
 edu\uees\tutorias\domain\ComprobanteAsistencia.class
+edu\uees\tutorias\patrones\strategy\CancelacionEstandarStrategy.class
 edu\uees\tutorias\notification\Notificador.class
 edu\uees\tutorias\patrones\observer\LogReservaObserver.class
 edu\uees\tutorias\domain\Docente.class
