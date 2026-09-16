@@ -10,7 +10,7 @@ import edu.uees.tutorias.patrones.builder.ReservaBuilder;
 
 public class ServicioReservas {
 
-    // Constantes estáticas para evitar Magic Strings
+    // Refactorización 2: Constantes estáticas (Extract Constant)
     private static final String PREFIJO_RESERVA_ID = "RES-";
     private static final String MENSAJE_CONFIRMACION  = "Tu reserva de tutoría ha sido registrada.";
 
@@ -22,32 +22,34 @@ public class ServicioReservas {
         this.notificador = notificador;
     }
 
-    // Sobrecarga usando el Builder directamente (Recomendado para Ae2)
-    public Reserva crearReserva(ReservaBuilder builder) {
-
-        // AE4 Guard Clause: Validación de builder nulo
+    public Reserva crearReserva(ReservaBuilder builder) {        
+       // Refactorización 1: Guard Clause
         if (builder == null) {
             return null;
         }
         Reserva reserva = builder.build();        
         
         // comentado por refactorizacion 3
-        // Guard Clause: Eliminación de Deep Nesting y validación de horario
+        // Refactorización 1: Guard Clause - Eliminación de Deep Nesting y validación de horario
         //if (reserva.getHorario() == null || !reserva.getHorario().estaDisponible()) {
         //    return reserva;
         //}
 
-        // Uso del método extraído esHorarioValido
+        // Refactorización 3: Validación modular (Extract Method)
         if (!esHorarioValido(reserva.getHorario())) {
             return reserva;
         }
 
-        reserva.getHorario().reservarCupo();
-        repositorio.guardar(reserva);
+        // Refactorización 4: Métodos de soporte extraídos (Extract Method)
+        procesarYGuardarReserva(reserva);
+        notificarEstudiante(reserva);
 
-        if (notificador != null && reserva.getEstudiante() != null) {
-            notificador.enviarMensaje(reserva.getEstudiante(), MENSAJE_CONFIRMACION);
-        }
+        //reserva.getHorario().reservarCupo();
+        //repositorio.guardar(reserva);
+
+        //if (notificador != null && reserva.getEstudiante() != null) {
+        //    notificador.enviarMensaje(reserva.getEstudiante(), MENSAJE_CONFIRMACION);
+        //}
 
         return reserva;
         
@@ -62,14 +64,13 @@ public class ServicioReservas {
         //return reserva;
     }
 
-    // Método legacy adaptado para compatibilidad con parámetros sueltos
     public void crearReserva(Estudiante estudiante, Docente docente, Materia materia, HorarioTutoria horario, String motivo) {
-        // Guard Clause: Validación contra horario nulo
+        // Refactorización 1:Guard Clause: Validación contra horario nulo
         //if (horario == null || !horario.estaDisponible()) {
         //    return;
         //}
 
-        // Uso del método extraído esHorarioValido
+        // Refactorización 3: Validación modular (Extract Method)
         if (!esHorarioValido(horario)) {
             return;
         }
@@ -100,5 +101,17 @@ public class ServicioReservas {
     // Refactorización 3: Método privado auxiliar extraído
     private boolean esHorarioValido(HorarioTutoria horario) {
         return horario != null && horario.estaDisponible();
+    }
+    
+    // Refactorización 4: Métodos de soporte extraídos
+    private void procesarYGuardarReserva(Reserva reserva) {
+        reserva.getHorario().reservarCupo();
+        repositorio.guardar(reserva);
+    }
+
+    private void notificarEstudiante(Reserva reserva) {
+        if (notificador != null && reserva.getEstudiante() != null) {
+            notificador.enviarMensaje(reserva.getEstudiante(), MENSAJE_CONFIRMACION);
+        }
     }
 }
