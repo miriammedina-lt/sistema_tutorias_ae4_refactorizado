@@ -114,3 +114,24 @@ sistema-tutorias/
 ## Declaración de Uso de IA
 
 Se utilizó asistencia de inteligencia artificial como herramienta de soporte para estructuración de diagramas PlantUML y soporte en la redacción de la documentación. La lógica de negocio y las decisiones arquitectónicas fueron validadas y adaptadas manualmente según los requerimientos académicos.
+
+---
+
+## 5.1. Refactorización Aplicada (Ae4)
+
+En este incremento se aplicó una reestructuración interna sobre el componente `ServicioReservas.java` para resolver problemas de mantenibilidad, acoplamiento y legibilidad (_code smells_), garantizando la paridad funcional mediante la ejecución de pruebas con Maven.
+
+### Técnicas Aplicadas
+
+- **Guard Clauses (Cláusulas de Guarda):** Se eliminó el anidamiento profundo (_Deep Nesting_) reemplazando bloques condicionales complejos por retornos tempranos ante valores nulos o estados no válidos.
+- **Extract Constant (Extracción de Constantes):** Se sustituyeron las cadenas de texto literales (_Magic Strings_) como `"RES-"` y `"Tu reserva de tutoría ha sido registrada."` por constantes estáticas privadas (`PREFIJO_RESERVA_ID` y `MENSAJE_CONFIRMACION`).
+- **Extract Method (Extracción de Métodos):** Se descompuso el método orquestador extrayendo responsabilidades específicas a métodos privados auxiliares:
+    - `esHorarioValido()`: Centraliza la regla de validación de disponibilidad del horario.
+    - `procesarYGuardarReserva()`: Gestiona la reserva de cupo y la persistencia en el repositorio.
+    - `notificarEstudiante()`: Encapsula el envío del mensaje de confirmación.
+
+### Impacto en el Diseño
+
+- **Legibilidad y Flujo Lineal:** El método principal pasó de un flujo condicional anidado a una secuencia plana y limpia.
+- **Principio de Responsabilidad Única (SRP):** Cada método privado asume una tarea puntual dentro del ciclo de vida de la reserva.
+- **Seguridad Defensiva:** Se incorporaron validaciones oportunas para prevenir excepciones inesperadas del tipo `NullPointerException`.
