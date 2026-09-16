@@ -29,10 +29,16 @@ public class ServicioReservas {
         if (builder == null) {
             return null;
         }
-        Reserva reserva = builder.build();
+        Reserva reserva = builder.build();        
         
+        // comentado por refactorizacion 3
         // Guard Clause: Eliminación de Deep Nesting y validación de horario
-        if (reserva.getHorario() == null || !reserva.getHorario().estaDisponible()) {
+        //if (reserva.getHorario() == null || !reserva.getHorario().estaDisponible()) {
+        //    return reserva;
+        //}
+
+        // Uso del método extraído esHorarioValido
+        if (!esHorarioValido(reserva.getHorario())) {
             return reserva;
         }
 
@@ -59,7 +65,12 @@ public class ServicioReservas {
     // Método legacy adaptado para compatibilidad con parámetros sueltos
     public void crearReserva(Estudiante estudiante, Docente docente, Materia materia, HorarioTutoria horario, String motivo) {
         // Guard Clause: Validación contra horario nulo
-        if (horario == null || !horario.estaDisponible()) {
+        //if (horario == null || !horario.estaDisponible()) {
+        //    return;
+        //}
+
+        // Uso del método extraído esHorarioValido
+        if (!esHorarioValido(horario)) {
             return;
         }
 
@@ -84,5 +95,10 @@ public class ServicioReservas {
 
         //    crearReserva(builder);
         //}
+    }
+
+    // Refactorización 3: Método privado auxiliar extraído
+    private boolean esHorarioValido(HorarioTutoria horario) {
+        return horario != null && horario.estaDisponible();
     }
 }
